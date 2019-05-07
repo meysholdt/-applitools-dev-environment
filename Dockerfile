@@ -29,3 +29,6 @@ ENV VNC_NO_PASSWORD=true
 
 # use .bashrc to launch Supervisord, in case it is not yet runnning
 RUN echo "[ ! -e /var/run/supervisor/supervisord.pid ] && /usr/bin/supervisord --configuration /etc/supervisord.conf" >> ~/.bashrc
+
+# the prompt in the Bash Terminal should show 'applitools' and not the current user name
+RUN { echo && echo "PS1='\[\e]0;applitools \w\a\]\[\033[01;32m\]applitools\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> ~/.bashrc
