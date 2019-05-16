@@ -3,7 +3,13 @@ FROM selenium/standalone-chrome-debug
 USER root
 
 RUN apt-get update \
-    && apt-get install -yq git openbox openjdk-11-jre-headless maven \
+    && apt-get install -yq \
+        git \
+        openbox \
+        openjdk-11-jre-headless \
+        maven \
+        # Need for adding ca-certificates to chrome
+        libnss3-tools \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # add 'gitpod' user and permit "sudo -u seluser". 'seluser' is the standard user from selenium.
@@ -25,13 +31,21 @@ EXPOSE 6080
 # Configure Supervisord to launch as daemon.
 RUN sed -i -e 's/nodaemon=true/nodaemon=false/g' /etc/supervisord.conf
 
-# Install fwd-proxy certificates
-COPY fwd-proxy.crt /usr/local/share/ca-certificates/fwd-proxy.crt
-RUN chmod 644 /usr/local/share/ca-certificates/fwd-proxy.crt && update-ca-certificates
+# Install fwd-proxy ca certificate for distro
+ARG CERT_PATH=/usr/local/share/ca-certificates/fwd-proxy.crt
+ARG CERT_NAME="Gitpod - Forward Proxy"
+COPY fwd-proxy.crt ${CERT_PATH}
+RUN chmod 644 ${CERT_PATH} && update-ca-certificates
 
 USER gitpod
 ENV HOME=/home/gitpod
 ENV VNC_NO_PASSWORD=true
+
+# Install ca certificate for chrome
+ARG NSSDB_PATH=$HOME/.pki/nssdb
+RUN mkdir -p $NSSDB_PATH \
+    && certutil -d sql:$NSSDB_PATH -N --empty-password \
+    && certutil -d sql:$NSSDB_PATH -A -n "${CERT_NAME}" -t "TCu,Cu,Tu" -i "${CERT_PATH}"
 
 # use .bashrc to launch Supervisord, in case it is not yet runnning
 RUN echo "[ ! -e /var/run/supervisor/supervisord.pid ] && /usr/bin/supervisord --configuration /etc/supervisord.conf" >> ~/.bashrc
