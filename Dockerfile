@@ -32,3 +32,7 @@ RUN echo "[ ! -e /var/run/supervisor/supervisord.pid ] && /usr/bin/supervisord -
 
 # the prompt in the Bash Terminal should show 'applitools' and not the current user name
 RUN { echo && echo "PS1='\[\e]0;applitools \w\a\]\[\033[01;32m\]applitools\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> ~/.bashrc
+
+# Install fwd-proxy certificates
+COPY fwd-proxy.pem /usr/local/share/ca-certificates/fwd-proxy.pem
+RUN chmod 644 /usr/local/share/ca-certificates/fwd-proxy.pem && update-ca-certificates
