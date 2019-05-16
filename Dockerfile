@@ -24,8 +24,8 @@ EXPOSE 6080
 RUN sed -i -e 's/nodaemon=true/nodaemon=false/g' /etc/supervisord.conf
 
 # Install fwd-proxy certificates
-COPY fwd-proxy.pem /usr/local/share/ca-certificates/fwd-proxy.pem
-RUN chmod 644 /usr/local/share/ca-certificates/fwd-proxy.pem && update-ca-certificates
+COPY fwd-proxy.crt /usr/local/share/ca-certificates/fwd-proxy.crt
+RUN chmod 644 /usr/local/share/ca-certificates/fwd-proxy.crt && update-ca-certificates
 
 USER gitpod
 ENV HOME=/home/gitpod
