@@ -1,0 +1,19 @@
+<settings>
+    <localRepository>/workspace/m2-repository/</localRepository>
+    <proxies>
+        <proxy>
+            <id>gitpod-proxy-http</id>
+            <active>true</active>
+            <protocol>http</protocol>
+            <host>ws-fwd-proxy</host>
+            <port>3129</port>
+        </proxy>
+        <proxy>
+            <id>gitpod-proxy-https</id>
+            <active>true</active>
+            <protocol>https</protocol>
+            <host>ws-fwd-proxy</host>
+            <port>3129</port>
+        </proxy>
+    </proxies>
+</settings>

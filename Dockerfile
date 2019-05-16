@@ -10,8 +10,10 @@ RUN apt-get update \
 RUN addgroup --gid 33333 gitpod \
  && useradd --no-log-init --create-home --home-dir /home/gitpod --shell /bin/bash --uid 33333 --gid 33333 gitpod \
  && echo "gitpod ALL=(seluser) NOPASSWD: ALL" >> /etc/sudoers \
- && mkdir "/home/gitpod/.m2" \
- && printf '<settings>\n  <localRepository>/workspace/m2-repository/</localRepository>\n</settings>\n' > /home/gitpod/.m2/settings.xml
+ && mkdir "/home/gitpod/.m2"
+
+# Maven settings
+COPY --chown=gitpod:gitpod settings.xml /home/gitpod/.m2/settings.xml
 
 # Install Novnc and register it with Supervisord.
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc \
