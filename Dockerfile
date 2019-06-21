@@ -41,6 +41,8 @@ USER gitpod
 ENV HOME=/home/gitpod
 ENV VNC_NO_PASSWORD=true
 
+ENV START_XVFB=true
+
 # Install ca certificate for chrome
 ARG NSSDB_PATH=$HOME/.pki/nssdb
 RUN mkdir -p $NSSDB_PATH \
