@@ -40,7 +40,6 @@ RUN chmod 644 ${CERT_PATH} && update-ca-certificates
 USER gitpod
 ENV HOME=/home/gitpod
 ENV VNC_NO_PASSWORD=true
-
 ENV START_XVFB=true
 
 # Install ca certificate for chrome
@@ -50,6 +49,7 @@ RUN mkdir -p $NSSDB_PATH \
     && certutil -d sql:$NSSDB_PATH -A -n "${CERT_NAME}" -t "TCu,Cu,Tu" -i "${CERT_PATH}"
 
 # use .bashrc to launch Supervisord, in case it is not yet runnning
+RUN echo ". /var/gitpod/docker_env" >> ~/.bashrc
 RUN echo "[ ! -e /var/run/supervisor/supervisord.pid ] && /usr/bin/supervisord --configuration /etc/supervisord.conf" >> ~/.bashrc
 
 # the prompt in the Bash Terminal should show 'applitools' and not the current user name
