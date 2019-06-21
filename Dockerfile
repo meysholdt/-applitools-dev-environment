@@ -31,7 +31,7 @@ EXPOSE 6080
 # Configure Supervisord to launch as daemon.
 RUN sed -i -e 's/nodaemon=true/nodaemon=false/g' /etc/supervisord.conf
 
-# Install fwd-proxy certificates
+# Install fwd-proxy ca certificate for distro
 ARG CERT_PATH=/usr/local/share/ca-certificates/fwd-proxy.crt
 ARG CERT_NAME="Gitpod - Forward Proxy"
 COPY fwd-proxy.crt ${CERT_PATH}
@@ -41,7 +41,7 @@ USER gitpod
 ENV HOME=/home/gitpod
 ENV VNC_NO_PASSWORD=true
 
-# Install certificates to browsers
+# Install ca certificate for chrome
 ARG NSSDB_PATH=$HOME/.pki/nssdb
 RUN mkdir -p $NSSDB_PATH \
     && certutil -d sql:$NSSDB_PATH -N --empty-password \
