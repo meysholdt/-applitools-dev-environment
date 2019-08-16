@@ -53,6 +53,10 @@ RUN echo "[ ! -e /var/run/supervisor/supervisord.pid ] && /usr/bin/supervisord -
 # the prompt in the Bash Terminal should show 'applitools' and not the current user name
 RUN { echo && echo "PS1='\[\e]0;applitools \w\a\]\[\033[01;32m\]applitools\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> ~/.bashrc
 
+ENV HTTP_PROXY=http://ws-fwd-proxy:3129
+ENV HTTPS_PROXY=http://ws-fwd-proxy:3129
+ENV NO_PROXY=localhost
+
 # NPM settings
 RUN npm config set proxy http://ws-fwd-proxy:3129 \
  && npm config set https-proxy http://ws-fwd-proxy:3129
@@ -61,5 +65,5 @@ RUN npm config set proxy http://ws-fwd-proxy:3129 \
 RUN mkdir "/home/gitpod/.m2"
 COPY --chown=gitpod:gitpod settings.xml /home/gitpod/.m2/settings.xml
 
-RUN echo "1" > "/home/gitpod/.imageversion"
+RUN echo "2" > "/home/gitpod/.imageversion"
 
