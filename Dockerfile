@@ -10,16 +10,14 @@ RUN apt-get update \
         maven \
         # Need for adding ca-certificates to chrome
         libnss3-tools \
+        # needed for JavaScript development
+        nodejs npm yarn \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # add 'gitpod' user and permit "sudo -u seluser". 'seluser' is the standard user from selenium.
 RUN addgroup --gid 33333 gitpod \
  && useradd --no-log-init --create-home --home-dir /home/gitpod --shell /bin/bash --uid 33333 --gid 33333 gitpod \
- && echo "gitpod ALL=(seluser) NOPASSWD: ALL" >> /etc/sudoers \
- && mkdir "/home/gitpod/.m2"
-
-# Maven settings
-COPY --chown=gitpod:gitpod settings.xml /home/gitpod/.m2/settings.xml
+ && echo "gitpod ALL=(seluser) NOPASSWD: ALL" >> /etc/sudoers
 
 # Install Novnc and register it with Supervisord.
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc \
@@ -54,4 +52,14 @@ RUN echo "[ ! -e /var/run/supervisor/supervisord.pid ] && /usr/bin/supervisord -
 
 # the prompt in the Bash Terminal should show 'applitools' and not the current user name
 RUN { echo && echo "PS1='\[\e]0;applitools \w\a\]\[\033[01;32m\]applitools\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> ~/.bashrc
+
+# NPM settings
+RUN npm config set proxy http://ws-fwd-proxy:3129 \
+ && npm config set https-proxy http://ws-fwd-proxy:3129
+
+# Maven settings
+RUN mkdir "/home/gitpod/.m2"
+COPY --chown=gitpod:gitpod settings.xml /home/gitpod/.m2/settings.xml
+
+RUN echo "1" > "/home/gitpod/.imageversion"
 
