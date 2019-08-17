@@ -46,6 +46,11 @@ RUN mkdir -p $NSSDB_PATH \
     && certutil -d sql:$NSSDB_PATH -N --empty-password \
     && certutil -d sql:$NSSDB_PATH -A -n "${CERT_NAME}" -t "TCu,Cu,Tu" -i "${CERT_PATH}"
 
+# workaround for env vars
+RUN echo "source <(xargs --null --max-args=1 echo export < /proc/1/environ | grep -E https?_proxy)" >> ~/.bashrc
+RUN echo "[ ! -z \"\$http_proxy\" ]  && export HTTP_PROXY=\"\$http_proxy\"" >> ~/.bashrc
+RUN echo "[ ! -z \"\$https_proxy\" ] && export HTTPS_PROXY=\"\$https_proxy\"" >> ~/.bashrc
+
 # use .bashrc to launch Supervisord, in case it is not yet runnning
 COPY --chown=root:root cfg-* /usr/bin/
 RUN echo "if [ ! -e /home/gitpod/.m2/settings.xml ]; then if [ -z \"\$HTTP_PROXY\" ]; then . cfg-noproxy.sh; else . cfg-proxy.sh; fi; fi" >> ~/.bashrc
@@ -55,8 +60,7 @@ RUN echo "[ ! -e /var/run/supervisor/supervisord.pid ] && /usr/bin/supervisord -
 RUN { echo && echo "PS1='\[\e]0;applitools \w\a\]\[\033[01;32m\]applitools\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> ~/.bashrc
 
 # Maven settings
-#RUN mkdir "/home/gitpod/.m2"
 COPY --chown=gitpod:gitpod m2/ /home/gitpod/.m2/
 
-RUN echo "3" > "/home/gitpod/.imageversion"
+RUN echo "4" > "/home/gitpod/.imageversion"
 
