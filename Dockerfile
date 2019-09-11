@@ -14,6 +14,8 @@ RUN apt-get update \
         nodejs npm yarn \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
+
 # add 'gitpod' user and permit "sudo -u seluser". 'seluser' is the standard user from selenium.
 RUN addgroup --gid 33333 gitpod \
  && useradd --no-log-init --create-home --home-dir /home/gitpod --shell /bin/bash --uid 33333 --gid 33333 gitpod \
