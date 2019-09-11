@@ -6,7 +6,7 @@ RUN apt-get update \
     && apt-get install -yq \
         git \
         openbox \
-        openjdk-11-jre-headless \
+        openjdk-11-jdk-headless \
         maven \
         # Need for adding ca-certificates to chrome
         libnss3-tools \
@@ -59,5 +59,5 @@ RUN { echo && echo "PS1='\[\e]0;applitools \w\a\]\[\033[01;32m\]applitools\[\033
 # Maven settings
 COPY --chown=gitpod:gitpod m2/ /home/gitpod/.m2/
 
-RUN echo "5" > "/home/gitpod/.imageversion"
+RUN echo "6" > "/home/gitpod/.imageversion"
 
