@@ -14,6 +14,9 @@ RUN apt-get update \
         nodejs npm yarn \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
+# install typescript to satisfy the VS Code extension
+RUN npm install -g typescript
+
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
 
 # add 'gitpod' user and permit "sudo -u seluser". 'seluser' is the standard user from selenium.
