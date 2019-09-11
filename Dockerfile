@@ -48,11 +48,6 @@ RUN mkdir -p $NSSDB_PATH \
     && certutil -d sql:$NSSDB_PATH -N --empty-password \
     && certutil -d sql:$NSSDB_PATH -A -n "${CERT_NAME}" -t "TCu,Cu,Tu" -i "${CERT_PATH}"
 
-# workaround for env vars
-RUN echo "source <(xargs --null --max-args=1 echo export < /proc/1/environ | grep -E https?_proxy)" >> ~/.bashrc
-RUN echo "[ ! -z \"\$http_proxy\" ]  && export HTTP_PROXY=\"\$http_proxy\"" >> ~/.bashrc
-RUN echo "[ ! -z \"\$https_proxy\" ] && export HTTPS_PROXY=\"\$https_proxy\"" >> ~/.bashrc
-
 # use .bashrc to launch Supervisord, in case it is not yet runnning
 COPY --chown=root:root cfg-* /usr/bin/
 RUN echo "if [ ! -e /home/gitpod/.m2/settings.xml ]; then if [ -z \"\$HTTP_PROXY\" ]; then . cfg-noproxy.sh; else . cfg-proxy.sh; fi; fi" >> ~/.bashrc
