@@ -59,5 +59,5 @@ RUN { echo && echo "PS1='\[\e]0;applitools \w\a\]\[\033[01;32m\]applitools\[\033
 # Maven settings
 COPY --chown=gitpod:gitpod m2/ /home/gitpod/.m2/
 
-RUN echo "4" > "/home/gitpod/.imageversion"
+RUN echo "5" > "/home/gitpod/.imageversion"
 
